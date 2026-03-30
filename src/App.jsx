@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const posts = [
   {
     userId: 1,
@@ -32,11 +34,26 @@ const posts = [
   },
 ];
 
+
+
 const App = () => {
+  let [count, setCount] = useState(10);
+
+  function handleDecrease() {
+    setCount((prev) => (prev > 0 ? prev - 1 : 0));
+  }
+
+  function handleIncrease() {
+    setCount((prev) => prev + 1);
+  }
+
   return (
     <>
       <div>
-        <CardList></CardList>
+        <button onClick={handleDecrease}>➖</button>
+        <span>{count}</span>
+        <button onClick={handleIncrease}>➕</button>
+        <CardList />
       </div>
     </>
   );
@@ -44,34 +61,41 @@ const App = () => {
 
 export default App;
 
-
-function CardList(){
+function CardList() {
   return (
-
     <>
-    
-    <div>
-      {posts.map((item) => {
-        return <Card key={item.id} title={item.title} para={item.body}></Card>
-      })}
-    </div>
-    
+      <div className="flex flex-wrap justify-center gap-2">
+        {posts.map((item) => {
+          return (
+            <Card
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              para={item.body}
+            ></Card>
+          );
+        })}
+      </div>
     </>
-
-  )
+  );
 }
 
-function Card({title, para}){
+function Card({ title, para }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleIsOpen() {
+    setIsOpen((prev) => (prev = !prev));
+  }
+
   return (
     <>
-    
-      <div className="w-50 bg-amber-300 px-4 py-3 rounded-2xl">
-          <h1 className="text-2xl font-bold">{title}</h1>
-          <p className="text-sm mt-2 opacity-75">
-            {para}
-          </p>
-        </div>
-
+      <div
+        onClick={handleIsOpen}
+        className="w-50 bg-amber-300 px-4 py-3 rounded-2xl"
+      >
+        <h1 className="text-2xl font-bold">{title}</h1>
+        {isOpen && <p className="text-sm mt-2 opacity-75">{para}</p>}
+      </div>
     </>
-  )
+  );
 }
